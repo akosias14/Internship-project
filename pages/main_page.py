@@ -12,6 +12,8 @@ class MainPage(Page):
         super().__init__(driver)
 
     def get_url(self, url):
+        if self.driver is None:
+            raise ValueError("Driver is not initialized")
         self.driver.get(url)
 
     def login(self, username, password):

@@ -1,9 +1,9 @@
 from selenium.webdriver.common.by import By
 from behave import given, when, then
 from time import sleep
+from selenium.webdriver.firefox.service import Service
+from webdriver_manager.firefox import GeckoDriverManager
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium import webdriver
 import time
@@ -11,8 +11,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from pages.base_page import Page
 
 
+
 @given('I open the main page "{url}"')
 def get_url(context, url):
+    if context.app is None:
+        raise Exception("Application has not been initialized")
     context.app.main_page.get_url('https://soft.reelly.io/')
 
 
