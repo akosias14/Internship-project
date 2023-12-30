@@ -8,32 +8,19 @@ from app.application import Application
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 
-
 def browser_init(context):
     """
     Initialize the browser and the Application object.
     :param context: Behave context
     """
-    # try:
-    #     service = Service(executable_path=GeckoDriverManager().install())
-    #     service = Service(executable_path='/Users/ms.kerry/Downloads/Scrambled GA Logo/Automation Internship/geckodriver')
-    #     context.driver = webdriver.Firefox(service=service)
-    #     context.driver.wait = WebDriverWait(context.driver, 15)
-    #     context.driver.maximize_window()
-    #     context.driver.implicitly_wait(4)
-    #     context.app = Application(context.driver)
-    #     context.app.initialize_pages()
-    # except Exception as e:
-    #     print(f'Error initializing the WebDriver: {e}')
-    #     context.driver = None
-    #     context.app = None
 
     ### Firefox Configuration ###
     # service = Service(executable_path='/Users/ms.kerry/Downloads/Scrambled GA Logo/Automation Internship/geckodriver')
     # context.driver = webdriver.Firefox(service=service)
     options = FirefoxOptions()
     context.driver = webdriver.Firefox(options=options)
-
+    context.app = Application(context.driver)
+    context.app.initialize_pages()
     # context.driver = webdriver.Safari()
     # driver_path = ChromeDriverManager().install()
     # service = Service(driver_path)
@@ -41,13 +28,16 @@ def browser_init(context):
 
 
 # HEADLESS MODE ####
-# options = webdriver.ChromeOptions()
-# options.add_argument('headless')
-# service = Service(ChromeDriverManager().install())
-# context.driver = webdriver.Chrome(
-#     options=options,
-#     service=service
-# )
+#
+    # options = webdriver.FirefoxOptions()
+    # options.add_argument('headless')
+    # service = Service(GeckoDriverManager().install())
+    # context.driver = webdriver.Firefox(options=options, service=service)
+
+    context.driver.wait = WebDriverWait(context.driver, 15)
+    context.driver.maximize_window()
+    context.driver.implicitly_wait(4)
+    context.app = Application(context.driver)
 
 def before_scenario(context, scenario):
     """

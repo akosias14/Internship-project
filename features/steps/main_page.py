@@ -1,17 +1,6 @@
 from selenium.webdriver.common.by import By
 from behave import given, when, then
 from time import sleep
-from selenium.webdriver.firefox.service import Service
-from webdriver_manager.firefox import GeckoDriverManager
-from selenium import webdriver
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium import webdriver
-import time
-from selenium.webdriver.support import expected_conditions as EC
-from pages.base_page import Page
-
-
-
 @given('I open the main page "{url}"')
 def get_url(context, url):
     if context.app is None:
@@ -20,7 +9,6 @@ def get_url(context, url):
 
 
 CONTINUE_BTN = (By.CSS_SELECTOR, 'a.login-button.w-button')
-OFF_PLAN_BTN = (By.CSS_SELECTOR, 'a._1-link-menu.w--current')
 HEADER = (By.CSS_SELECTOR, 'div.page-title')
 FILTERS_BTN = (By.CSS_SELECTOR, 'a.filter-button')
 OUT_OF_STOCK_BTN = (By.XPATH, '//div[@class="tag-properties" and @wized="priorityStatusOutOfStock"]/div[@class="tag-text-proparties"]')
@@ -30,6 +18,7 @@ OOS_FILTER_RESULTS = (By.CSS_SELECTOR, 'div.div-block-18')
 @when('I log in to the page')
 def login(context):
     context.app.main_page.login(username='aosias@pivot-point.com', password='Test1234!')
+    sleep(15)
 
 
 @when('click the continue button')
@@ -51,14 +40,7 @@ def filter_by_oos_status(context, status):
     context.app.off_plan_page.click_filters_button()
     context.app.off_plan_page.filter_by_oos_status(status)
 
-
-
 @then('I verify each product contains the "{tag}" tag')
 def step_verify_product_tags(context, tag):
-    all_contain_tag, product_details = context.app.off_plan_page.verify_product_tags(tag)
-    for product_text, contains_tag in product_details:
-        print(f"Product: '{product_text}', Contains Tag: {contains_tag}")
-
-    assert all_contain_tag, f"Products don't contain the '{tag}' tag"
-
+    context.app.off_plan_page.verify_product_tags(tag)
 

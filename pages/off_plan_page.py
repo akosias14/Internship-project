@@ -10,8 +10,8 @@ from selenium.common.exceptions import TimeoutException
 
 class OffPlanPage(Page):
     FILTERS_BTN = (By.CSS_SELECTOR, 'a.filter-button')
-    OUT_OF_STOCK_BTN = (By.CSS_SELECTOR, "#email-form > div:nth-child(1) > div.filters-tags > div:nth-child(6) > div")
-    OOS_FILTER_RESULTS = (By.CSS_SELECTOR, 'div.project-image[wized="projectImage"] .commision-text-box [wized="projectStatus"]')
+    OOS_BTN = (By.CSS_SELECTOR, '[wized="priorityStatusOutOfStock"][class="tag-properties margin-bottom-8"]>[class="tag-text-proparties"]')
+    OOS_FILTER_RESULTS = (By.CSS_SELECTOR, 'div.div-block-18')
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -21,31 +21,20 @@ class OffPlanPage(Page):
 
 
     def filter_by_oos_status(self, status):
-        OUT_OF_STOCK_BTN = (By.CSS_SELECTOR, "#email-form > div:nth-child(1) > div.filters-tags > div:nth-child(6) > div")
+        OOS_BTN = (By.CSS_SELECTOR, '[wized="priorityStatusOutOfStock"][class="tag-properties margin-bottom-8"]>[class="tag-text-proparties"]')
         try:
-            out_of_stock = (self.wait.until(EC.visibility_of_element_located(OUT_OF_STOCK_BTN)))
+            out_of_stock = (self.wait.until(EC.visibility_of_element_located(OOS_BTN)))
             out_of_stock.click()
             sleep(10)
         except TimeoutException:
             print(self.driver.page_source)
             raise
 
+    def verify_product_tags(self, expected_tag):
+        tags = self.find_elements(*self.OOS_FILTER_RESULTS)
+        expected_tag = expected_tag.strip().lower()
 
+        for tag in tags:
+            assert expected_tag in tag.text.strip().lower(), f"Expected '{expected_tag}' not in '{tag.text}'"
 
-
-    def verify_product_tags(self, tag):
-        OOS_FILTER_RESULTS = (By.CSS_SELECTOR, 'div.project-image[wized="projectImage"] .commision-text-box [wized="projectStatus"]')
-        product_elements = self.find_elements(*self.OOS_FILTER_RESULTS)
-        product_details = []
-        all_contain_tag = True
-
-        for product in product_elements:
-            product_text = product.text.strip().lower()
-            expected_tag = tag.strip().lower()
-            contains_tag = expected_tag not in product_text
-            product_details.append((product_text,contains_tag))
-            if not contains_tag:
-                all_contain_tag = False
-        return all_contain_tag, product_details
-
-    sleep(20)
+    sleep(5)

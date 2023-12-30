@@ -9,6 +9,7 @@ class Application:
         self.driver = driver
         self.main_page = None
         self.off_plan_page = None
+        self.initialize_pages()
     ...
     def initialize_pages(self):
         self.main_page = MainPage(self.driver)
