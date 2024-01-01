@@ -18,7 +18,7 @@ OOS_FILTER_RESULTS = (By.CSS_SELECTOR, 'div.div-block-18')
 @when('I log in to the page')
 def login(context):
     context.app.main_page.login(username='aosias@pivot-point.com', password='Test1234!')
-    sleep(15)
+    sleep(5)
 
 
 @when('click the continue button')

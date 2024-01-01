@@ -21,7 +21,7 @@ class MainPage(Page):
         self.driver.get(url)
 
     def login(self, username, password):
-        time.sleep(5)
+        # time.sleep(5)
         username_field = self.driver.find_element(*self.USERNAME)
         password_field = self.driver.find_element(*self.PASSWORD)
         username_field.send_keys(username)
@@ -40,16 +40,16 @@ class MainPage(Page):
 
         if menu.lower() == "off plan":
             try:
-                off_plan_menu = self.driver.find_element(*OFF_PLAN_BTN)
+                off_plan_menu = WebDriverWait(self.driver, 5).until(EC.presence_of_element_located(OFF_PLAN_BTN))
                 off_plan_menu.click()
             except TimeoutException:
-                # If the "Off Plan" button is not immediately visible, scroll to it
+                print("Timeout occurred while waiting for the element")
                 self.driver.execute_script("arguments[0].scrollIntoView(true);", menu_button)
                 off_plan_menu = self.driver.find_element(*OFF_PLAN_BTN)
                 off_plan_menu.click()
         else:
             print(f"Menu option '{menu}' not recognized.")
-        WebDriverWait(self.driver, 10).until(lambda driver: 'off-plan' in driver.current_url)
+        WebDriverWait(self.driver, 5).until(lambda driver: 'off-plan' in driver.current_url)
 
     def verify_right_page(self):
         time.sleep(5)
